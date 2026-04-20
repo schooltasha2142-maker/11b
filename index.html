@@ -1,0 +1,1488 @@
+html_content = '''<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аналіз та документація вимог проєкту | Інформатика 9 клас</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #06b6d4;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-50px, -50px); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 5%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Progress bar */
+        .progress-container {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 999;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: var(--glass);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin-bottom: 3rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--glass);
+            color: var(--light);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        /* Section headers */
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .tabs-nav {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+
+        .tab-content {
+            padding: 3rem;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .requirement-type {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+
+        .req-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .req-icon.functional {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.1));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .req-icon.non-functional {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(6, 182, 212, 0.1));
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+        .req-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .req-list li {
+            padding: 0.75rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--gray);
+        }
+
+        .req-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        /* Game Section */
+        .game-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-statement {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .game-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .game-btn {
+            padding: 1rem 2rem;
+            border: 2px solid;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+        }
+
+        .game-btn.functional {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .game-btn.functional:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .game-btn.non-functional {
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        .game-btn.non-functional:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: slideIn 0.3s;
+        }
+
+        .feedback.correct {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .feedback.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .score-display {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .score-display span {
+            color: var(--accent);
+        }
+
+        /* Group Task */
+        .project-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .project-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .project-card.selected {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .project-card .emoji {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-card p {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .requirements-form {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+
+        .form-group textarea,
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--light);
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            transition: all 0.3s;
+        }
+
+        .form-group textarea:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-group textarea::placeholder,
+        .form-group input::placeholder {
+            color: var(--gray);
+        }
+
+        /* Quiz */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quiz-question {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .quiz-question h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .quiz-option {
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .option-letter {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .quiz-result {
+            text-align: center;
+            padding: 3rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .quiz-result.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .result-score {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        /* Homework Page */
+        .homework-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1));
+            border: 2px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .homework-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .homework-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .homework-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+        }
+
+        .homework-card ul {
+            list-style: none;
+        }
+
+        .homework-card li {
+            padding: 0.75rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--gray);
+        }
+
+        .homework-card li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .subject-btn {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--light);
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .subject-btn:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 5%;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            position: absolute;
+            animation: confetti-fall 3s linear forwards;
+            z-index: 9999;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .requirement-type {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .req-icon {
+                margin: 0 auto;
+            }
+            
+            .game-buttons {
+                flex-direction: column;
+            }
+            
+            .subject-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">IT-школа</div>
+        <ul class="nav-links">
+            <li><a href="#hero">Головна</a></li>
+            <li><a href="#theory">Теорія</a></li>
+            <li><a href="#game">Гра</a></li>
+            <li><a href="#practice">Практика</a></li>
+            <li><a href="#quiz">Тест</a></li>
+            <li><a href="#homework">Домашнє завдання</a></li>
+        </ul>
+    </nav>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero visible">
+        <span class="hero-badge">Інформатика 9 клас</span>
+        <h1>Аналіз та документація<br>вимог проєкту</h1>
+        <p>Навчись правильно формулювати вимоги до програмного продукту та створювати технічну документацію</p>
+        <a href="#goals" class="btn btn-primary">Почати урок →</a>
+    </section>
+
+    <!-- Goals Section -->
+    <section id="goals">
+        <div class="section-header">
+            <h2>Мета уроку</h2>
+            <p>Що ти вивчиш сьогодні</p>
+        </div>
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-icon">🎯</div>
+                <h3>Розуміти вимоги</h3>
+                <p>Навчишся розрізняти функціональні та нефункціональні вимоги до програмного продукту</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📝</div>
+                <h3>Документувати</h3>
+                <p>Опануєш навички створення технічної документації проєкту</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🔍</div>
+                <h3>Аналізувати</h3>
+                <p>Зможеш аналізувати потреби користувачів та формулювати чіткі вимоги</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🚀</div>
+                <h3>Застосовувати</h3>
+                <p>Створиш власний проєкт з повним документуванням вимог</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Theory Section -->
+    <section id="theory">
+        <div class="section-header">
+            <h2>Теорія</h2>
+            <p>Що таке вимоги до проєкту?</p>
+        </div>
+        
+        <div style="background: var(--card-bg); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);">
+            <p style="font-size: 1.1rem; line-height: 1.8; color: var(--gray);">
+                <strong style="color: var(--light);">Вимоги до проєкту</strong> — це детальний опис того, що повинен робити програмний продукт, як він має виглядати та якими характеристиками повинен володіти. Вимоги є основою для розробки та тестування програмного забезпечення.
+            </p>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tabs-nav">
+                <button class="tab-btn active" onclick="switchTab('functional')">Функціональні вимоги</button>
+                <button class="tab-btn" onclick="switchTab('non-functional')">Нефункціональні вимоги</button>
+            </div>
+            
+            <div id="functional" class="tab-content active">
+                <div class="requirement-type">
+                    <div class="req-icon functional">⚙️</div>
+                    <div>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--primary);">Функціональні вимоги</h3>
+                        <p style="color: var(--gray); margin-bottom: 1.5rem;">Описують, <strong>що саме</strong> повинна робити система. Визначають функції, можливості та дії, які продукт має виконувати.</p>
+                        <ul class="req-list">
+                            <li>Система повинна дозволяти користувачу реєструватися та входити в обліковий запис</li>
+                            <li>Користувач може додавати товари до кошика та оформлювати замовлення</li>
+                            <li>Адміністратор може додавати, редагувати та видаляти продукти</li>
+                            <li>Система надсилає підтвердження на email після реєстрації</li>
+                            <li>Користувач може фільтрувати товари за категоріями та ціною</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="non-functional" class="tab-content">
+                <div class="requirement-type">
+                    <div class="req-icon non-functional">🎨</div>
+                    <div>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--secondary);">Нефункціональні вимоги</h3>
+                        <p style="color: var(--gray); margin-bottom: 1.5rem;">Описують, <strong>як саме</strong> система повинна працювати. Визначають якість, обмеження та характеристики роботи продукту.</p>
+                        <ul class="req-list">
+                            <li>Сторінка повинна завантажуватися не більше ніж за 3 секунди</li>
+                            <li>Інтерфейс повинен бути адаптивним для мобільних пристроїв</li>
+                            <li>Система повинна підтримувати одночасно 1000 користувачів</li>
+                            <li>Дані користувачів повинні бути захищені шифруванням</li>
+                            <li>Дизайн повинен відповідати сучасним стандартам доступності (WCAG)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Section -->
+    <section id="game">
+        <div class="section-header">
+            <h2>🎮 Вгадай тип вимоги</h2>
+            <p>Перевір свої знання інтерактивно</p>
+        </div>
+        
+        <div class="game-container">
+            <div class="score-display">Рахунок: <span id="score">0</span> / <span id="total">0</span></div>
+            <div id="streak" style="color: var(--accent); font-weight: 600; margin-bottom: 1rem; min-height: 1.5rem;"></div>
+            
+            <div class="game-card">
+                <div class="game-statement" id="statement">Натисніть кнопку нижче, щоб почати гру!</div>
+                <div class="game-buttons" id="gameButtons" style="display: none;">
+                    <button class="game-btn functional" onclick="checkAnswer('functional')">Функціональна</button>
+                    <button class="game-btn non-functional" onclick="checkAnswer('non-functional')">Нефункціональна</button>
+                </div>
+            </div>
+            
+            <div class="feedback" id="feedback"></div>
+            
+            <button class="btn btn-primary" id="startGameBtn" onclick="startGame()">Почати гру</button>
+            <button class="btn btn-secondary" id="nextBtn" onclick="nextQuestion()" style="display: none;">Наступне питання →</button>
+        </div>
+    </section>
+
+    <!-- Group Task -->
+    <section id="group-task">
+        <div class="section-header">
+            <h2>Групове завдання</h2>
+            <p>Обери проєкт та сформулюй вимоги</p>
+        </div>
+
+        <div class="project-selector">
+            <div class="project-card" onclick="selectProject(this, 'library')">
+                <div class="emoji">📚</div>
+                <h4>Бібліотека</h4>
+                <p>Система обліку книг у шкільній бібліотеці</p>
+            </div>
+            <div class="project-card" onclick="selectProject(this, 'cafe')">
+                <div class="emoji">☕</div>
+                <h4>Кафе онлайн</h4>
+                <p>Сайт для замовлення їжі з доставкою</p>
+            </div>
+            <div class="project-card" onclick="selectProject(this, 'schedule')">
+                <div class="emoji">📅</div>
+                <h4>Розклад уроків</h4>
+                <p>Додаток для перегляду шкільного розкладу</p>
+            </div>
+            <div class="project-card" onclick="selectProject(this, 'weather')">
+                <div class="emoji">🌤️</div>
+                <h4>Погода</h4>
+                <p>Прогноз погоди з інтерактивною мапою</p>
+            </div>
+        </div>
+
+        <div class="requirements-form">
+            <h3 style="margin-bottom: 1.5rem;">Документ вимог</h3>
+            <div class="form-group">
+                <label>Назва проєкту</label>
+                <input type="text" id="projectName" placeholder="Наприклад: Шкільна бібліотека">
+            </div>
+            <div class="form-group">
+                <label>Мета проєкту</label>
+                <textarea id="projectGoal" rows="2" placeholder="Для чого потрібен цей проєкт? Хто буде користуватися?"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Функціональні вимоги (перерахуй через кому або з нового рядка)</label>
+                <textarea id="funcReq" rows="4" placeholder="• Користувач може шукати книги за назвою&#10;• Адміністратор може додавати нові книги&#10;• Система надсилає нагадування про термін повернення"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Нефункціональні вимоги</label>
+                <textarea id="nonFuncReq" rows="4" placeholder="• Сторінка завантажується за 2 секунди&#10;• Підтримка мобільних пристроїв&#10;• Захист даних користувачів"></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="saveRequirements()">💾 Зберегти документ</button>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section id="quiz">
+        <div class="section-header">
+            <h2>Самоперевірка</h2>
+            <p>Пройди тест та перевір свої знання</p>
+        </div>
+
+        <div class="quiz-container" id="quizContainer">
+            <div class="quiz-question" data-question="1">
+                <h4>1. Що описують функціональні вимоги?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectOption(this, 1, 'A')">
+                        <span class="option-letter">A</span>
+                        <span>Як система повинна виглядати та працювати з технічного боку</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 1, 'B')">
+                        <span class="option-letter">B</span>
+                        <span>Що саме система повинна робити, які функції виконувати</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 1, 'C')">
+                        <span class="option-letter">C</span>
+                        <span>Скільки коштує розробка проєкту</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-question" data-question="2">
+                <h4>2. Який з наведених прикладів є нефункціональною вимогою?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectOption(this, 2, 'A')">
+                        <span class="option-letter">A</span>
+                        <span>Користувач може створювати нові записи</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 2, 'B')">
+                        <span class="option-letter">B</span>
+                        <span>Система підтримує експорт даних у PDF</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 2, 'C')">
+                        <span class="option-letter">C</span>
+                        <span>Сторінка завантажується не більше ніж за 3 секунди</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-question" data-question="3">
+                <h4>3. Навіщо потрібна документація вимог?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectOption(this, 3, 'A')">
+                        <span class="option-letter">A</span>
+                        <span>Щоб ускладнити роботу розробникам</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 3, 'B')">
+                        <span class="option-letter">B</span>
+                        <span>Щоб всі учасники проєкту розуміли, що потрібно створити</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 3, 'C')">
+                        <span class="option-letter">C</span>
+                        <span>Тільки для того, щоб здати викладачу</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-question" data-question="4">
+                <h4>4. Що з переліченого є функціональною вимогою для сайту НМТ?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectOption(this, 4, 'A')">
+                        <span class="option-letter">A</span>
+                        <span>Сайт має сучасний дизайн</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 4, 'B')">
+                        <span class="option-letter">B</span>
+                        <span>Користувач може проходити тести та бачити результати</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 4, 'C')">
+                        <span class="option-letter">C</span>
+                        <span>Сайт працює швидко на мобільному телефоні</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-question" data-question="5">
+                <h4>5. Які вимоги стосуються безпеки даних?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectOption(this, 5, 'A')">
+                        <span class="option-letter">A</span>
+                        <span>Функціональні</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 5, 'B')">
+                        <span class="option-letter">B</span>
+                        <span>Нефункціональні</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 5, 'C')">
+                        <span class="option-letter">C</span>
+                        <span>Жодні з перелічених</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="submitQuiz()" style="width: 100%; margin-top: 2rem;">Перевірити відповіді</button>
+        </div>
+
+        <div class="quiz-result" id="quizResult">
+            <div class="result-score" id="resultScore">0/5</div>
+            <h3 id="resultTitle">Результат</h3>
+            <p id="resultText" style="color: var(--gray); margin: 1rem 0;"></p>
+            <button class="btn btn-secondary" onclick="resetQuiz()">Спробувати ще раз</button>
+        </div>
+    </section>
+
+    <!-- Homework Section -->
+    <section id="homework" class="homework-section">
+        <div class="section-header">
+            <h2>🏠 Домашнє завдання: Проєктна робота</h2>
+            <p>Створи власний сайт для підготовки до НМТ</p>
+        </div>
+
+        <div style="background: var(--card-bg); border-radius: 20px; padding: 2rem; margin-bottom: 3rem; border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);">
+            <h3 style="margin-bottom: 1rem; color: var(--accent);">Суть завдання</h3>
+            <p style="color: var(--gray); line-height: 1.8;">
+                Тобі потрібно створити власний вебсайт для підготовки до НМТ з одного предмету на вибір. Це може бути як повноцінний сайт, так і детальна презентація зі структурою та макетами. Головне — правильно сформулювати вимоги та продумати структуру!
+            </p>
+        </div>
+
+        <div class="homework-grid">
+            <div class="homework-card">
+                <h3>📋 Вибір предмету</h3>
+                <p style="color: var(--gray); margin-bottom: 1rem;">Обери один з предметів:</p>
+                <div class="subject-grid">
+                    <button class="subject-btn">📐 Математика</button>
+                    <button class="subject-btn">🇺🇦 Українська мова</button>
+                    <button class="subject-btn">🏛️ Історія України</button>
+                    <button class="subject-btn">🇬🇧 Англійська мова</button>
+                </div>
+            </div>
+
+            <div class="homework-card">
+                <h3>🏗️ Структура сайту</h3>
+                <ul>
+                    <li>Головна сторінка з описом</li>
+                    <li>Сторінка з теоретичним матеріалом</li>
+                    <li>Інтерактивні тести</li>
+                    <li>Практичні завдання</li>
+                    <li>Навігація між розділами</li>
+                </ul>
+            </div>
+
+            <div class="homework-card">
+                <h3>⚙️ Функціональні вимоги</h3>
+                <ul>
+                    <li>Навігація між сторінками</li>
+                    <li>Можливість проходити тести</li>
+                    <li>Відображення навчального матеріалу</li>
+                    <li>Перевірка відповідей</li>
+                    <li>Збереження прогресу</li>
+                </ul>
+            </div>
+
+            <div class="homework-card">
+                <h3>🎨 Нефункціональні вимоги</h3>
+                <ul>
+                    <li>Зручний інтерфейс</li>
+                    <li>Швидке завантаження</li>
+                    <li>Адаптивність для мобільних</li>
+                    <li>Сучасний дизайн</li>
+                    <li>Доступність (читабельність)</li>
+                </ul>
+            </div>
+
+            <div class="homework-card">
+                <h3>⭐ Бонусні завдання</h3>
+                <ul>
+                    <li>Інтерактивні елементи</li>
+                    <li>Анімації та переходи</li>
+                    <li>Власний унікальний дизайн</li>
+                    <li>Таймер для тестів</li>
+                    <li>Звукові ефекти</li>
+                </ul>
+            </div>
+
+            <div class="homework-card">
+                <h3>📤 Формат здачі</h3>
+                <ul>
+                    <li>Посилання на опублікований сайт</li>
+                    <li>Або файл HTML/CSS/JS</li>
+                    <li>Або презентація з макетами</li>
+                    <li>Документ з вимогами</li>
+                    <li>Опис функціоналу</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+            <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(6, 182, 212, 0.2)); border-radius: 20px; padding: 2rem; border: 1px solid rgba(99, 102, 241, 0.3);">
+                <h3 style="margin-bottom: 1rem;">🎯 Мета проєкту</h3>
+                <p style="color: var(--gray); max-width: 600px; margin: 0 auto;">
+                    Показати вміння аналізувати вимоги, створювати структуру продукту та реалізовувати ідею. 
+                    Не бійся експериментувати та додавати власні функції!
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>IT-школа | Інформатика 9 клас | Урок: Аналіз та документація вимог проєкту</p>
+    </footer>
+
+    <script>
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Tabs
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Game
+        const questions = [
+            { text: "Користувач може фільтрувати товари за ціною", type: "functional" },
+            { text: "Сайт завантажується не більше ніж за 2 секунди", type: "non-functional" },
+            { text: "Система надсилає підтвердження на email", type: "functional" },
+            { text: "Інтерфейс адаптується під мобільні пристрої", type: "non-functional" },
+            { text: "Адміністратор може додавати нові продукти", type: "functional" },
+            { text: "Дані зберігаються у зашифрованому вигляді", type: "non-functional" },
+            { text: "Користувач може залишати відгуки", type: "functional" },
+            { text: "Сайт підтримує 1000 одночасних користувачів", type: "non-functional" }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let total = 0;
+        let streak = 0;
+
+        function startGame() {
+            currentQuestion = 0;
+            score = 0;
+            total = 0;
+            streak = 0;
+            updateScore();
+            document.getElementById('startGameBtn').style.display = 'none';
+            document.getElementById('gameButtons').style.display = 'flex';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestion >= questions.length) {
+                document.getElementById('statement').textContent = `Гру завершено! Твій результат: ${score}/${total}`;
+                document.getElementById('gameButtons').style.display = 'none';
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('startGameBtn').style.display = 'inline-flex';
+                document.getElementById('startGameBtn').textContent = 'Грати ще раз';
+                if (score === total && score > 0) createConfetti();
+                return;
+            }
+            
+            document.getElementById('statement').textContent = questions[currentQuestion].text;
+            document.getElementById('feedback').classList.remove('show');
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('gameButtons').style.display = 'flex';
+        }
+
+        function checkAnswer(type) {
+            const correct = questions[currentQuestion].type;
+            const feedback = document.getElementById('feedback');
+            total++;
+            
+            if (type === correct) {
+                score++;
+                streak++;
+                feedback.textContent = streak >= 3 ? `🔥 Чудово! Серія правильних відповідей: ${streak}!` : '✅ Правильно! Молодець!';
+                feedback.className = 'feedback correct show';
+                if (streak >= 3) createConfetti();
+            } else {
+                streak = 0;
+                feedback.textContent = correct === 'functional' 
+                    ? '❌ Неправильно. Це функціональна вимога — вона описує ЩО робить система.' 
+                    : '❌ Неправильно. Це нефункціональна вимога — вона описує ЯК працює система.';
+                feedback.className = 'feedback incorrect show';
+            }
+            
+            updateScore();
+            document.getElementById('gameButtons').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'inline-flex';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            showQuestion();
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('total').textContent = total;
+            document.getElementById('streak').textContent = streak >= 3 ? `Серія: ${streak} 🔥` : '';
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.background = ['#6366f1', '#06b6d4', '#f59e0b', '#10b981', '#ec4899'][Math.floor(Math.random() * 5)];
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 4000);
+            }
+        }
+
+        // Project selector
+        function selectProject(element, project) {
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            
+            const names = {
+                'library': 'Система обліку шкільної бібліотеки',
+                'cafe': 'Онлайн-замовлення їжі "Смакота"',
+                'schedule': 'Шкільний розклад уроків',
+                'weather': 'Погода в Україні'
+            };
+            
+            document.getElementById('projectName').value = names[project];
+        }
+
+        function saveRequirements() {
+            const name = document.getElementById('projectName').value;
+            if (!name) {
+                alert('Спочатку введи назву проєкту!');
+                return;
+            }
+            
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '✅ Збережено!';
+            btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 2000);
+            
+            createConfetti();
+        }
+
+        // Quiz
+        const correctAnswers = {
+            1: 'B',
+            2: 'C',
+            3: 'B',
+            4: 'B',
+            5: 'B'
+        };
+
+        const userAnswers = {};
+
+        function selectOption(element, question, answer) {
+            const questionEl = document.querySelector(`[data-question="${question}"]`);
+            questionEl.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            userAnswers[question] = answer;
+        }
+
+        function submitQuiz() {
+            let correct = 0;
+            const totalQuestions = 5;
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const questionEl = document.querySelector(`[data-question="${i}"]`);
+                const options = questionEl.querySelectorAll('.quiz-option');
+                
+                options.forEach(opt => {
+                    const letter = opt.querySelector('.option-letter').textContent;
+                    if (letter === correctAnswers[i]) {
+                        opt.classList.add('correct');
+                    } else if (letter === userAnswers[i] && userAnswers[i] !== correctAnswers[i]) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+                
+                if (userAnswers[i] === correctAnswers[i]) {
+                    correct++;
+                }
+            }
+            
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('quizResult').classList.add('show');
+            document.getElementById('resultScore').textContent = `${correct}/${totalQuestions}`;
+            
+            const percentage = (correct / totalQuestions) * 100;
+            let title, text;
+            
+            if (percentage === 100) {
+                title = '🏆 Ідеально!';
+                text = 'Ти чудово знаєш тему! Готовий до проєктної роботи.';
+                createConfetti();
+            } else if (percentage >= 80) {
+                title = '⭐ Молодець!';
+                text = 'Дуже добре! Трохи практики — і буде ідеально.';
+            } else if (percentage >= 60) {
+                title = '👍 Непогано!';
+                text = 'Переглянь теоретичну частину ще раз і спробуй знову.';
+            } else {
+                title = '📚 Потрібно повторити';
+                text = 'Рекомендую ще раз перечитати теорію про вимоги.';
+            }
+            
+            document.getElementById('resultTitle').textContent = title;
+            document.getElementById('resultText').textContent = text;
+        }
+
+        function resetQuiz() {
+            userAnswers = {};
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('quizResult').classList.remove('show');
+            
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+        }
+    </script>
+</body>
+</html>'''
+
+with open('/mnt/agents/output/lesson_requirements.html', 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print("HTML файл створено успішно!")
+print(f"Розмір файлу: {len(html_content)} символів")
